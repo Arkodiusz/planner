@@ -4,16 +4,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.xhtmlrenderer.layout.SharedContext;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+
+import static com.arje.FileUtils.*;
 
 public class Main {
 
@@ -27,30 +23,42 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String pathToTemplateHtml = "C:/code/planner/src/main/resources/template.html";
-        String pathToXlsFile = "C:/code/planner/plan1.xlsx";
+        validateArgsNumber(args);
 
-        // read html template
+        String pathToTemplateHtml = args[0];
+        String pathToXlsFile = args[1];
+
         String htmlString = getStringFromFile(pathToTemplateHtml);
+        String cssString = getStringFromFile(getPathWithDifferentExtension(pathToTemplateHtml, CSS));
 
-        // replace MARKER_STYLE with styling read from template.css placed in the same dir ad template html
-        htmlString = htmlString.replace($_STYLE, getStringFromFile(getPathToNewFile(pathToTemplateHtml, CSS)));
+        htmlString = htmlString.replace($_STYLE, cssString);
+//        htmlString = htmlString.replace($_PATH_TO_LOGO, cssString);
 
+        Iterator<Sheet> sheets = getSheetsFromXls(pathToXlsFile);
 
-        // open xls file
-        FileInputStream xlsFile = new FileInputStream(pathToXlsFile);
-        Workbook workbook = new XSSFWorkbook(xlsFile);
-        Iterator<Sheet> sheets = workbook.iterator();
-
-        // replace markers from sheet0
-        Sheet sheet0 = sheets.next();
-        for (Row row : sheet0) {
+        // replace markers with info included in first sheet
+        Sheet sheetWithPlanInfo = sheets.next();
+        for (Row row : sheetWithPlanInfo) {
             String marker = $ + row.getCell(0).toString();
             String text = row.getCell(1).toString();
             htmlString = htmlString.replace(marker, text);
         }
 
-        // fill document with training plans
+        String trainingPlans = getPlansFromSheets(sheets);
+        htmlString = htmlString.replace($_PLANS, trainingPlans);
+
+
+        File tempHtmlFile = new File(getPathWithDifferentExtension(pathToXlsFile, HTML));
+        FileUtils.writeStringToFile(tempHtmlFile, htmlString, StandardCharsets.UTF_8);
+
+
+        writePDF(tempHtmlFile.getAbsolutePath());
+
+//        tempHtmlFile.delete();
+
+    }
+
+    private static String getPlansFromSheets(Iterator<Sheet> sheets) {
         StringBuilder trainingPlans = new StringBuilder();
 
         while (sheets.hasNext()) {
@@ -93,22 +101,26 @@ public class Main {
 
                 plan.append("<tr>");
 
-                for (Cell cell : row) {
+                for (int column = 0; column < columnCount; column++) {
+                    Cell cell = row.getCell(column);
+
+
                     plan.append("<td>");
-                    plan.append(cell.toString().replace(".0", ""));
+
+                    if (cell != null) {
+                        plan.append(cell.toString().replace(".0", ""));
+                    }
+
                     plan.append("</td>");
                     i++;
                 }
 
-                while(i < columnCount) {
+                while (i < columnCount) {
                     plan.append("<td></td>");
                     i++;
                 }
 
                 plan.append("</tr>");
-
-
-
             }
 
             //comments
@@ -123,74 +135,18 @@ public class Main {
             }
 
 
-
             plan.append("</table>");
             plan.append("</div>");
 
             trainingPlans.append(plan);
-
         }
 
-        htmlString = htmlString.replace($_PLANS, trainingPlans);
-
-
-
-
-        String pathToGeneratedHtml = getPathToNewFile(pathToXlsFile, HTML);
-        File tempHtmlFile = new File(pathToGeneratedHtml);
-        FileUtils.writeStringToFile(tempHtmlFile, htmlString, StandardCharsets.UTF_8);
-
-
-
-
-
-        writePDF(pathToGeneratedHtml);
-
-        // remove temporary html file
-//        tempHtmlFile.delete();
-
+        return trainingPlans.toString();
     }
 
-    private static String getStringFromFile(String pathToFile) {
-        String result = "";
-        try {
-            File file = new File(pathToFile);
-            result = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static void validateArgsNumber(String[] args) {
+        if (args.length != 2) {
+            throw new RuntimeException("ERROR! Wrong number of command line arguments. \n Usage: java -jar [path-to-jar] [path-to-html-template] [path-to-xls-with-plans]");
         }
-        return result;
-    }
-
-    private static void writePDF(String pathToSourceHtml) {
-        File inputHTML = new File(pathToSourceHtml);
-
-        Document document;
-        try {
-            document = Jsoup.parse(inputHTML, "UTF-8");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-
-        try (OutputStream outputStream = new FileOutputStream(getPathToNewFile(pathToSourceHtml, PDF))) {
-            ITextRenderer renderer = new ITextRenderer();
-            SharedContext sharedContext = renderer.getSharedContext();
-            sharedContext.setMedia("screen");
-//            sharedContext.setPrint(true);
-            sharedContext.setInteractive(false);
-            renderer.setDocumentFromString(document.html());
-            renderer.layout();
-            renderer.createPDF(outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String getPathToNewFile(String sourcePath, String extension) {
-        String basePath = sourcePath.substring(0,sourcePath.lastIndexOf("/"));
-        String fileName = sourcePath.replace(basePath, "");
-        String rawFileName = fileName.substring(0, fileName.indexOf("."));
-        return basePath + "/" + rawFileName + extension;
     }
 }
