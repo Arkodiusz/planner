@@ -1,0 +1,34 @@
+
+body {
+  background-color: gray;
+}
+
+.description {
+    max-width: 500px;
+    background-color: lightblue;
+}
+
+.multiple_plans {
+  background-color: white;
+}
+
+.single_plan {
+  page-break-inside:avoid
+}
+
+table, th, td {
+  border: 1px solid;
+  empty-cells: show;
+}
+
+th {
+  background-color: red;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+td {
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
