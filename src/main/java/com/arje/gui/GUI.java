@@ -1,7 +1,5 @@
 package com.arje.gui;
 
-import com.arje.Planner;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -9,14 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import static com.arje.Planner.*;
+import static com.arje.Main.*;
 
 public class GUI implements ActionListener {
 
-    private final Planner planner;
-
-    private String pathToTemplateHtml;
-    private String pathToXlsFile;
+    private String pathToTemplateHtml = "C:\\xyz\\template.html";
+    private String pathToXlsFile = "C:\\xyz\\plan1.xlsx";
 
     JPanel panel = new JPanel();
 
@@ -30,9 +26,7 @@ public class GUI implements ActionListener {
 
     private final JFileChooser fileChooser = new JFileChooser();
 
-    public GUI(Planner planner) {
-
-        this.planner = planner;
+    public GUI() {
 
         JFrame frame = new JFrame("TRENUJ ZDROWO");
 
@@ -93,7 +87,7 @@ public class GUI implements ActionListener {
                 JOptionPane.showMessageDialog(panel, "Selected plan is not " + XLS + " or " + XLSX);
             } else {
                 try {
-                    planner.generatePdfFromGivenFiles(pathToTemplateHtml, pathToXlsFile);
+                    generatePdfFromGivenFiles(pathToTemplateHtml, pathToXlsFile);
                     JOptionPane.showMessageDialog(panel, "Success!");
                 } catch (Exception e) { //TODO: exception handling
                     JOptionPane.showMessageDialog(panel, e.getMessage());

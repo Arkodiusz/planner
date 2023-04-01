@@ -1,4 +1,4 @@
-package com.arje;
+package com.arje.html;
 
 public class HtmlBuilder {
 

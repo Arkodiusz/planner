@@ -1,7 +1,7 @@
-package com.arje;
+package com.arje.pdf;
 
-import org.apache.poi.util.IOUtils;
 import com.lowagie.text.Image;
+import org.apache.poi.util.IOUtils;
 import org.w3c.dom.Element;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
@@ -13,9 +13,10 @@ import org.xhtmlrenderer.pdf.ITextImageElement;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
-public class MediaReplacedElementFactory implements ReplacedElementFactory {
+class MediaReplacedElementFactory implements ReplacedElementFactory {
     private final ReplacedElementFactory superFactory;
 
     public MediaReplacedElementFactory(ReplacedElementFactory superFactory) {
