@@ -28,34 +28,35 @@ public class Main {
         String pathToTemplateHtml = args[0];
         String pathToXlsFile = args[1];
 
-        String htmlString = getStringFromFile(pathToTemplateHtml);
-        String cssString = getStringFromFile(getPathWithDifferentExtension(pathToTemplateHtml, CSS));
+        HtmlBuilder htmlBuilder = new HtmlBuilder(getStringFromFile(pathToTemplateHtml));
 
-        htmlString = htmlString.replace($_STYLE, cssString);
-//        htmlString = htmlString.replace($_PATH_TO_LOGO, cssString);
+        htmlBuilder.replace($_STYLE, getStringFromFile(getPathWithDifferentExtension(pathToTemplateHtml, CSS)));
 
         Iterator<Sheet> sheets = getSheetsFromXls(pathToXlsFile);
 
         // replace markers with info included in first sheet
         Sheet sheetWithPlanInfo = sheets.next();
         for (Row row : sheetWithPlanInfo) {
-            String marker = $ + row.getCell(0).toString();
-            String text = row.getCell(1).toString();
-            htmlString = htmlString.replace(marker, text);
+            replaceMarkerWithText(htmlBuilder, row);
         }
 
-        String trainingPlans = getPlansFromSheets(sheets);
-        htmlString = htmlString.replace($_PLANS, trainingPlans);
+        htmlBuilder.replace($_PLANS, getPlansFromSheets(sheets));
 
 
         File tempHtmlFile = new File(getPathWithDifferentExtension(pathToXlsFile, HTML));
-        FileUtils.writeStringToFile(tempHtmlFile, htmlString, StandardCharsets.UTF_8);
+        FileUtils.writeStringToFile(tempHtmlFile, htmlBuilder.getHtmlString(), StandardCharsets.UTF_8);
 
 
         writePDF(tempHtmlFile.getAbsolutePath());
 
 //        tempHtmlFile.delete();
 
+    }
+
+    private static void replaceMarkerWithText(HtmlBuilder htmlBuilder, Row row) {
+        String marker = $ + row.getCell(0).toString();
+        String text = row.getCell(1).toString();
+        htmlBuilder.replace(marker, text);
     }
 
     private static String getPlansFromSheets(Iterator<Sheet> sheets) {
