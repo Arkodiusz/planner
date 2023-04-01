@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-import static com.arje.Main.PDF;
+import static com.arje.Planner.PDF;
 
 public class FileUtils {
 
