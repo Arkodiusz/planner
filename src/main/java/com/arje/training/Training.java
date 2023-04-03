@@ -70,27 +70,31 @@ public class Training {
 
             html.append("<table>");
             
-            html.append("<tr>");
+            html.append("<tr class=\"header_row\">");
+            int header_column = 0;
             for (String header : headers) {
-                html.append("<th>");
+                html.append(header_column == 0 ? "<th class=\"header_name\">" : "<th class=\"header_detail\">");
                 html.append(header);
                 html.append("</th>");
+                header_column++;
             }
             html.append("</tr>");
 
         for (List<String> exercise : exercises) {
-            html.append("<tr>");
+            html.append("<tr class=\"exercise_row\">");
+            int exercise_column = 0;
             for (String detail : exercise) {
-                html.append("<td>");
+                html.append(exercise_column == 0 ? "<td class=\"exercise_name\">" : "<td class=\"exercise_detail\">");
                 html.append(detail);
                 html.append("</td>");
+                exercise_column++;
             }
             html.append("</tr>");
         }
 
         if (!comments.isBlank()) {
             html.append("<tr>");
-            html.append("<td colspan=\"");
+            html.append("<td class=\"comment_row\" colspan=\"");
             html.append(columnCount);
             html.append("\">");
             html.append(comments);
@@ -100,7 +104,7 @@ public class Training {
 
         html.append("</table>");
         html.append("</div>");
-        
+
         return html.toString();
     }
 }
