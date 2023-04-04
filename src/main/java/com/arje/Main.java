@@ -35,6 +35,7 @@ public class Main {
         HtmlBuilder htmlBuilder = new HtmlBuilder(getStringFromFile(PATH_TO_TEMPLATE_HTML));
         htmlBuilder.includeStyling(getStringFromFile(PATH_TO_TEMPLATE_CSS));
         htmlBuilder.includePlanInfo(sheets.next());
+        htmlBuilder.includePlanData(sheets.next());
         htmlBuilder.includeTrainingPlans(sheets);
 
         File tempHtmlFile = getTemporaryHtmlFile(pathToXlsFile);

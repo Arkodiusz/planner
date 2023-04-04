@@ -1,5 +1,6 @@
 package com.arje.html;
 
+import com.arje.training.Data;
 import com.arje.training.Training;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -10,6 +11,7 @@ public class HtmlBuilder {
 
     private static final String $ = "$";
     private static final String $_STYLE = "$style";
+    private static final String $_DATA = "$data";
     private static final String $_PLANS = "$plans";
 
     private String htmlString;
@@ -27,6 +29,11 @@ public class HtmlBuilder {
         for (Row row : sheetWithPlanInfo) {
             replaceMarkerWithText(row);
         }
+    }
+
+    public void includePlanData(Sheet sheetWithPlanData) {
+        Data data = new Data(sheetWithPlanData);
+        replace($_DATA, data.toHtml());
     }
 
     public void includeTrainingPlans(Iterator<Sheet> sheets) {
