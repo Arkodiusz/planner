@@ -12,8 +12,14 @@ public class Data {
 
     public Data(Sheet sheet) {
         for (Row row : sheet) {
-            data.put(row.getCell(0).toString(), row.getCell(1).toString());
+            if (isNotNullRow(row)) {
+                data.put(row.getCell(0).toString(), row.getCell(1).toString());
+            }
         }
+    }
+
+    private static boolean isNotNullRow(Row row) {
+        return row.getCell(0) != null && row.getCell(1) != null;
     }
 
     public String toHtml() {

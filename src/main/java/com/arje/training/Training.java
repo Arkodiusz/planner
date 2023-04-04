@@ -17,11 +17,17 @@ public class Training {
     private int columnCount;
 
     public Training(Sheet sheet) {
-        this.name = sheet.getSheetName();
-
         Iterator<Row> rows = sheet.iterator();
 
-        Row commentsRow = sheet.getRow(0);
+        Row nameRow = sheet.getRow(0);
+        if (nameRow != null) {
+            this.name = nameRow.getCell(0).toString();
+            rows.next();
+        } else {
+            this.name = "TRAINING";
+        }
+
+        Row commentsRow = sheet.getRow(1);
         if (commentsRow != null) {
             this.comments = commentsRow.getCell(0).toString();
             rows.next();
