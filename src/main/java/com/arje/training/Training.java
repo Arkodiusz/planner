@@ -90,8 +90,24 @@ public class Training {
             html.append("<tr class=\"exercise_row\">");
             int exercise_column = 0;
             for (String detail : exercise) {
-                html.append(exercise_column == 0 ? "<td class=\"exercise_name\">" : "<td class=\"exercise_detail\">");
-                html.append(detail);
+                if (exercise_column == 0) {
+                    html.append("<td class=\"exercise_name\">");
+                    String[] split = detail.split("@");
+                    if (split.length == 1){
+                        html.append(detail);
+                    } else if (split.length == 2) {
+                        html.append("<a href=\"");
+                        html.append(split[1]);
+                        html.append("\">");
+                        html.append(split[0]);
+                        html.append("</a>");
+                    } else {
+                        throw new RuntimeException("ERROR! Exercise name/link format error in training " + this.name);
+                    }
+                } else {
+                    html.append("<td class=\"exercise_detail\">");
+                    html.append(detail);
+                }
                 html.append("</td>");
                 exercise_column++;
             }
