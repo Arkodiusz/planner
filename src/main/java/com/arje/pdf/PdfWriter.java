@@ -2,7 +2,6 @@ package com.arje.pdf;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
@@ -15,6 +14,7 @@ import static com.arje.utils.FileUtils.getPathWithDifferentExtension;
 public class PdfWriter {
 
     private static final String PDF = ".pdf";
+    private static final int PAGE_HEIGHT_PX = 1056;
 
     private String escapeHTML(String s){
         StringBuilder sb = new StringBuilder();
@@ -48,27 +48,27 @@ public class PdfWriter {
     }
 
     public static void convertHtmlToPdf(File sourceHtml) {
-        Document document;
-        try {
-            document = Jsoup.parse(sourceHtml, "UTF-8");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-
         try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(sourceHtml.getAbsolutePath(), PDF))) {
             ITextRenderer renderer = new ITextRenderer();
-            SharedContext sharedContext = renderer.getSharedContext();
-            sharedContext.setMedia("screen");
-//            sharedContext.setPrint(true);
-            sharedContext.setInteractive(false);
-//            sharedContext.setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory()));
-//            renderer.setDocumentFromString(escapeHTML(document.html()));
-            renderer.setDocumentFromString(document.html());
+            Document document = Jsoup.parse(sourceHtml, "UTF-8");
+            document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+            int pageCount = calculatePageCount(renderer, document);
+            renderer.getSharedContext().setInteractive(false);
+            renderer.setDocumentFromString(getHtmlWithFooterPlacedAtBottomOfLastPdfPage(document, pageCount));
             renderer.layout();
             renderer.createPDF(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static int calculatePageCount(ITextRenderer renderer, Document document) {
+        renderer.setDocumentFromString(document.html());
+        renderer.layout();
+        return renderer.getRootBox().getLayer().getPages().size();
+    }
+
+    private static String getHtmlWithFooterPlacedAtBottomOfLastPdfPage(Document document, int pageCount) {
+        return document.html().replace("$pixels", "-" + ((pageCount - 1) * PAGE_HEIGHT_PX) + "px");
     }
 }
