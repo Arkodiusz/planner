@@ -11,13 +11,13 @@ import static com.arje.Main.*;
 
 public class GUI implements ActionListener {
 
-    private String pathToTemplateHtml = "C:\\xyz\\template.html";
+
     private String pathToXlsFile = "C:\\xyz\\plan1.xlsx";
 
     JPanel panel = new JPanel();
 
-    private final JButton chooseHtmlButton = new JButton("Choose HTML template");
-    private final JLabel htmlPathLabel = new JLabel("HTML path: ");
+//    private final JButton chooseHtmlButton = new JButton("Choose HTML template");
+//    private final JLabel htmlPathLabel = new JLabel("HTML path: ");
 
     private final JButton chooseXlsButton = new JButton("Choose XLS with plan");
     private final JLabel xlsPathLabel = new JLabel("XLS path: ");
@@ -32,10 +32,6 @@ public class GUI implements ActionListener {
 
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 
-
-        chooseHtmlButton.setSize(120, 30);
-        chooseHtmlButton.addActionListener(this);
-
         chooseXlsButton.setSize(120, 30);
         chooseXlsButton.addActionListener(this);
 
@@ -43,10 +39,7 @@ public class GUI implements ActionListener {
         generateButton.addActionListener(this);
 
         panel.setBorder(BorderFactory.createEmptyBorder(120, 120, 120, 120));
-        panel.setLayout(new GridLayout(3, 2));
-
-        panel.add(chooseHtmlButton);
-        panel.add(htmlPathLabel);
+        panel.setLayout(new GridLayout(2, 2));
 
         panel.add(chooseXlsButton);
         panel.add(xlsPathLabel);
@@ -62,15 +55,6 @@ public class GUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        if (event.getSource() == chooseHtmlButton) {
-            fileChooser.setFileFilter(new FileNameExtensionFilter("HTML file", "html"));
-            int returnVal = fileChooser.showOpenDialog(panel);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                pathToTemplateHtml = fileChooser.getSelectedFile().getAbsolutePath();
-                htmlPathLabel.setText("HTML path: " + pathToTemplateHtml);
-            }
-        }
-
         if (event.getSource() == chooseXlsButton) {
             fileChooser.setFileFilter(new FileNameExtensionFilter("XLS file", "xls", "xlsx"));
             int returnVal = fileChooser.showOpenDialog(panel);
@@ -81,17 +65,11 @@ public class GUI implements ActionListener {
         }
 
         if (event.getSource() == generateButton) {
-            if (!pathToTemplateHtml.endsWith(HTML)) {
-                JOptionPane.showMessageDialog(panel, "Selected template is not " + HTML);
-            } else if (!(pathToXlsFile.endsWith(XLS) || pathToXlsFile.endsWith(XLSX))) {
-                JOptionPane.showMessageDialog(panel, "Selected plan is not " + XLS + " or " + XLSX);
-            } else {
-                try {
-                    generatePdfFromGivenFiles(pathToTemplateHtml, pathToXlsFile);
-                    JOptionPane.showMessageDialog(panel, "Success!");
-                } catch (Exception e) { //TODO: exception handling
-                    JOptionPane.showMessageDialog(panel, e.getMessage());
-                }
+            try {
+                generatePdfFromGivenFiles(pathToXlsFile);
+                JOptionPane.showMessageDialog(panel, "Success!");
+            } catch (Exception e) { //TODO: exception handling
+                JOptionPane.showMessageDialog(panel, e.getMessage());
             }
         }
     }

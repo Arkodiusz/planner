@@ -1,0 +1,130 @@
+@page { 
+  margin: 10px 0px 10px 0px; /* top | right | bottom | left */
+}
+
+@font-face {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+* {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+html {
+  
+}
+
+body {
+  margin-top: 0px;
+}
+
+.header {
+  background-color: #c70000;	
+  height: 110px;
+  width: 100%;
+  position: relative;  
+}
+
+.logo_container {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: 5px;
+}
+
+.logo {	
+  width: 200px;
+}
+
+.info {  
+	width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+	text-align: center;
+}
+
+.description {
+    max-width: 500px;
+    background-color: lightblue;
+}
+
+.multiple_plans {
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+}
+
+.single_plan {
+  page-break-inside: avoid;
+	width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+table {
+	width: 100%;
+}
+
+table, td {
+  border: 1px solid;
+  border-color: #ded5d0;
+  border-collapse: collapse;
+  empty-cells: show;
+}
+
+th {
+  border: 1px solid;
+  border-color: #c70000;
+  border-collapse: collapse;
+  empty-cells: show;
+}
+
+.header_row {
+  background-color: #c70000;
+  color: white;
+  font-weight: bold;
+}
+
+.header_name {
+  text-align: left;
+  width: 60%;
+  padding: 6px;
+  padding-left: 8px;
+}
+
+.header_detail {
+  text-align: center;
+}
+
+
+.exercise_row {
+
+}
+
+.exercise_name {
+  text-align: left;
+  font-weight: bold;
+  padding: 4px;
+  padding-left: 8px;
+}
+
+.exercise_detail {
+  text-align: center;
+}
+
+
+.comment_row {
+  background-color: #ded5d0;
+  color: #c70000;
+  padding: 4px;
+  padding-left: 8px;
+}

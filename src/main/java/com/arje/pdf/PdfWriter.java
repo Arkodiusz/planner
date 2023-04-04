@@ -47,18 +47,16 @@ public class PdfWriter {
         return sb.toString();
     }
 
-    public void writePDF(String pathToSourceHtml) {
-        File inputHTML = new File(pathToSourceHtml);
-
+    public static void convertHtmlToPdf(File sourceHtml) {
         Document document;
         try {
-            document = Jsoup.parse(inputHTML, "UTF-8");
+            document = Jsoup.parse(sourceHtml, "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 
-        try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(pathToSourceHtml, PDF))) {
+        try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(sourceHtml.getAbsolutePath(), PDF))) {
             ITextRenderer renderer = new ITextRenderer();
             SharedContext sharedContext = renderer.getSharedContext();
             sharedContext.setMedia("screen");

@@ -2,26 +2,23 @@ package com.arje;
 
 import com.arje.gui.GUI;
 import com.arje.html.HtmlBuilder;
-import com.arje.pdf.PdfWriter;
-import com.arje.training.Training;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
+import static com.arje.pdf.PdfWriter.convertHtmlToPdf;
 import static com.arje.utils.FileUtils.getPathWithDifferentExtension;
 import static com.arje.utils.FileUtils.getStringFromFile;
 import static com.arje.utils.XlsUtils.getSheetsFromXls;
+import static org.apache.commons.io.FileUtils.writeStringToFile;
 
 public class Main {
 
-    public static final String $ = "$";
-    public static final String $_STYLE = "$style";
-    public static final String $_PLANS = "$plans";
+    private static final String PATH_TO_TEMPLATE_HTML = "template/template.html";
+    private static final String PATH_TO_TEMPLATE_CSS = "template/template.css";
 
-    public static final String CSS = ".css";
     public static final String HTML = ".html";
     public static final String XLS = ".xls";
     public static final String XLSX = ".xlsx";
@@ -30,45 +27,37 @@ public class Main {
         new GUI();
     }
 
-    public static void generatePdfFromGivenFiles(String pathToTemplateHtml, String pathToXlsFile) throws Exception {
-        HtmlBuilder htmlBuilder = new HtmlBuilder(getStringFromFile(pathToTemplateHtml));
-
-        htmlBuilder.replace($_STYLE, getStringFromFile(getPathWithDifferentExtension(pathToTemplateHtml, CSS)));
+    public static void generatePdfFromGivenFiles(String pathToXlsFile) throws Exception {
+        validateXlsFilePath(pathToXlsFile);
 
         Iterator<Sheet> sheets = getSheetsFromXls(pathToXlsFile);
 
-        replaceMarkersWithPlanInfo(htmlBuilder, sheets.next());
+        HtmlBuilder htmlBuilder = new HtmlBuilder(getStringFromFile(PATH_TO_TEMPLATE_HTML));
+        htmlBuilder.includeStyling(getStringFromFile(PATH_TO_TEMPLATE_CSS));
+        htmlBuilder.includePlanInfo(sheets.next());
+        htmlBuilder.includeTrainingPlans(sheets);
 
-        htmlBuilder.replace($_PLANS, getTrainingsFromSheets(sheets));
+        File tempHtmlFile = getTemporaryHtmlFile(pathToXlsFile);
+        writeStringToFile(tempHtmlFile, htmlBuilder.getHtmlString(), StandardCharsets.UTF_8);
 
-        File tempHtmlFile = new File(getPathWithDifferentExtension(pathToXlsFile, HTML));
-        org.apache.commons.io.FileUtils.writeStringToFile(tempHtmlFile, htmlBuilder.getHtmlString(), StandardCharsets.UTF_8);
+        convertHtmlToPdf(tempHtmlFile);
 
-        new PdfWriter().writePDF(tempHtmlFile.getAbsolutePath());
+        deleteTemporaryHtml(tempHtmlFile);
+    }
 
+    private static File getTemporaryHtmlFile(String pathToXlsFile) {
+        return new File(getPathWithDifferentExtension(pathToXlsFile, HTML));
+    }
+
+    private static void validateXlsFilePath(String pathToXlsFile) {
+        if (!(pathToXlsFile.endsWith(XLS) || pathToXlsFile.endsWith(XLSX))) {
+            throw new RuntimeException("Selected plan is not " + XLS + " or " + XLSX);
+        }
+    }
+
+    private static void deleteTemporaryHtml(File tempHtmlFile) {
         if (!tempHtmlFile.delete()) {
             throw new RuntimeException("ERROR! couldn't delete " + tempHtmlFile.getAbsolutePath());
         }
-    }
-
-    private static void replaceMarkersWithPlanInfo(HtmlBuilder htmlBuilder, Sheet sheetWithPlanInfo) {
-        for (Row row : sheetWithPlanInfo) {
-            replaceMarkerWithText(htmlBuilder, row);
-        }
-    }
-
-    private static void replaceMarkerWithText(HtmlBuilder htmlBuilder, Row row) {
-        String marker = $ + row.getCell(0).toString();
-        String text = row.getCell(1).toString();
-        htmlBuilder.replace(marker, text);
-    }
-
-    private static String getTrainingsFromSheets(Iterator<Sheet> sheets) {
-        StringBuilder trainingPlans = new StringBuilder();
-        while (sheets.hasNext()) {
-            Training training = new Training(sheets.next());
-            trainingPlans.append(training.toHtml());
-        }
-        return trainingPlans.toString();
     }
 }
