@@ -4,10 +4,16 @@
 
 @font-face {
     font-family: 'Barlow', sans-serif;
+    font-family: 'Barlow Bold', sans-serif;
+    font-family: 'Barlow Black', sans-serif;
 }
 
 * {
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Barlow Bold', sans-serif;
+}
+
+h3 {
+    font-family: 'Barlow Black', sans-serif;
 }
 
 html,
@@ -67,11 +73,8 @@ body {
     text-decoration: none;
 }
 
-#footer_link>a:link {
-    color: white;
-}
-
-#footer_link>a:visited {
+#footer_link > a:link,
+#footer_link > a:visited {
     color: white;
 }
 
@@ -168,6 +171,7 @@ h1 {
 }
 
 h3 {
+    font-size: 25px;
     margin-top: 25px;
     margin-bottom: 10px;
 }
@@ -215,6 +219,12 @@ th {
     font-weight: bold;
     padding: 4px;
     padding-left: 8px;
+}
+
+.exercise_name > a:link,
+.exercise_name > a:visited
+.exercise_name > a:link {
+    color: black;
 }
 
 .exercise_detail {

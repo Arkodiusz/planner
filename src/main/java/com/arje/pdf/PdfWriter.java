@@ -55,6 +55,9 @@ public class PdfWriter {
             int pageCount = calculatePageCount(renderer, document);
             renderer.getSharedContext().setInteractive(false);
             renderer.setDocumentFromString(getHtmlWithFooterPlacedAtBottomOfLastPdfPage(document, pageCount));
+            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Regular.ttf", true);
+            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Bold.ttf", true);
+            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Black.ttf", true);
             renderer.layout();
             renderer.createPDF(outputStream);
         } catch (IOException e) {
