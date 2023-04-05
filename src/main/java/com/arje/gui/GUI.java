@@ -28,7 +28,8 @@ public class GUI implements ActionListener {
 
     public GUI() {
 
-        JFrame frame = new JFrame("TRENUJ ZDROWO");
+        String projecVersion = getClass().getPackage().getImplementationVersion();
+        JFrame frame = new JFrame("Planner " + projecVersion);
 
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 
@@ -67,7 +68,7 @@ public class GUI implements ActionListener {
         if (event.getSource() == generateButton) {
             try {
                 generatePdfFromGivenFiles(pathToXlsFile);
-                JOptionPane.showMessageDialog(panel, "Success!");
+//                JOptionPane.showMessageDialog(panel, "Success!");
             } catch (Exception e) { //TODO: exception handling
                 JOptionPane.showMessageDialog(panel, e.getMessage());
             }

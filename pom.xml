@@ -6,7 +6,7 @@
 
     <groupId>com.arje</groupId>
     <artifactId>planner</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -55,6 +55,8 @@
                     <archive>
                         <manifest>
                             <mainClass>com.arje.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -71,6 +73,8 @@
                     <archive>
                         <manifest>
                             <mainClass>com.arje.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
