@@ -127,9 +127,7 @@ h1 {
 }
 
 .no_border {
-    border: 5px solid;
-    border-collapse: collapse;
-    border-color: white;
+    border-style: none;
 }
 
 #details {
@@ -257,4 +255,16 @@ h3 {
     padding-left: 8px;
     font-weight: bold;
     font-size: 15px;
+}
+
+/*workaround to have a clickable logo in header*/
+#link_logo {
+background-color: blue;
+width: 200px;
+float: left;
+position: absolute;
+left: 50%;
+margin-left: -100px;
+top: 20px;
+z-index:-1
 }
