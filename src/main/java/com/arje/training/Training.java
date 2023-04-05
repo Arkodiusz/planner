@@ -74,7 +74,7 @@ public class Training {
             html.append(this.name);
             html.append("</h3>");
 
-            html.append("<table>");
+            html.append("<table class=training_table>");
             
             html.append("<tr class=\"header_row\">");
             int header_column = 0;

@@ -4,15 +4,27 @@
 
 @font-face {
     font-family: 'Barlow', sans-serif;
-    font-family: 'Barlow Bold', sans-serif;
+    font-family: 'Barlow Medium', sans-serif;
+    font-family: 'Barlow SemiBold', sans-serif;
     font-family: 'Barlow Black', sans-serif;
 }
 
 * {
-    font-family: 'Barlow Bold', sans-serif;
+    font-family: 'Barlow Medium', sans-serif;
 }
 
-h3 {
+h1,
+.exercise_name,
+.exercise_name>a,
+.exercise_detail,
+.comment_row
+{
+    font-family: 'Barlow SemiBold', sans-serif;
+}
+
+h3,
+#footer_link>a,
+.header_row>th {
     font-family: 'Barlow Black', sans-serif;
 }
 
@@ -63,8 +75,8 @@ body {
     border-top: 1px solid white;
     position: absolute;
     left: 20px;
-    top: 30px;
-    padding-top: 10px;
+    top: 32px;
+    padding-top: 6px;
 }
 
 #footer_link>a {
@@ -81,8 +93,9 @@ body {
 #footer_motto {
     position: absolute;
     left: 50%;
-    top: 30px;
+    top: 26px;
     color: white;
+    font-size: 16px;
 }
 
 #footer_motto>p {
@@ -176,19 +189,23 @@ h3 {
     margin-bottom: 10px;
 }
 
-table {
+.training_table {
     width: 100%;
 }
 
-table,
-td {
+.training_table,
+.exercise_row,
+.exercise_name,
+.exercise_detail {
     border: 1px solid;
     border-color: #ded5d0;
     border-collapse: collapse;
     empty-cells: show;
 }
 
-th {
+.header_row,
+.header_name,
+.header_detail {
     border: 1px solid;
     border-color: #c70000;
     border-collapse: collapse;
@@ -199,11 +216,12 @@ th {
     background-color: #c70000;
     color: white;
     font-weight: bold;
+    font-size: 17px;
 }
 
 .header_name {
     text-align: left;
-    width: 60%;
+    width: 50%;
     padding: 6px;
     padding-left: 8px;
 }
@@ -212,11 +230,12 @@ th {
     text-align: center;
 }
 
-.exercise_row {}
+.exercise_row {
+    font-size: 16px;
+}
 
 .exercise_name {
     text-align: left;
-    font-weight: bold;
     padding: 4px;
     padding-left: 8px;
 }
@@ -234,6 +253,8 @@ th {
 .comment_row {
     background-color: #ded5d0;
     color: #c70000;
-    padding: 4px;
+    padding: 6px;
     padding-left: 8px;
+    font-weight: bold;
+    font-size: 15px;
 }
