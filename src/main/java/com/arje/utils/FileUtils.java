@@ -16,13 +16,6 @@ public class FileUtils {
     }
 
     public static String getPathWithDifferentExtension(String sourcePath, String extension) {
-        int lastIndexOfSlash = sourcePath.lastIndexOf("/");
-        if (lastIndexOfSlash == -1) {
-            lastIndexOfSlash = sourcePath.lastIndexOf("\\");
-        }
-        String basePath = sourcePath.substring(0, lastIndexOfSlash);
-        String fileName = sourcePath.replace(basePath, "");
-        String rawFileName = fileName.substring(0, fileName.indexOf("."));
-        return basePath + "/" + rawFileName + extension;
+        return sourcePath.substring(0, sourcePath.lastIndexOf(".")) + extension;
     }
 }

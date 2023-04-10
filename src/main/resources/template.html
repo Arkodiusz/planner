@@ -1,0 +1,89 @@
+<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:utext="${document_title}"></title>
+	<style th:utext="${style}"></style>
+</head>
+<body>
+<div id="header">
+	<div id="header_logo_container">
+		<img id="header_logo" src="https://files.clickweb.home.pl/cf/46/cf4653e2-2166-48c2-b45c-07cce608e064.png" alt="logo"/>
+	</div>
+</div>
+
+<div id="content">
+	<div id="info">
+		<h1 th:utext="${training_name}"></h1>
+		<table id="details" class="no_border">
+			<tr>
+				<td id="description" class="no_border">
+					<div>
+						<p th:utext="${description}"></p>
+					</div>
+				</td>
+				<td id="data" class="no_border">
+					<div>
+						<table th:each="dataRow : ${data}">
+							<tr>
+								<td class="data_entry_key" th:text="${dataRow.key}"></td>
+								<td th:utext="${dataRow.value}"></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id=multiple_plans_container>
+		
+		<div class=single_plan th:each="training : ${trainings}">
+			<h3 th:utext="${training.name}"></h3>
+			<table class="training_table">
+				<tr class="header_row">
+					<th th:each="header, iStat : ${training.headers}"
+							th:utext="${header}"
+							th:class="${iStat.first} ? header_name : header_detail">
+					</th>
+				</tr>
+				<tr class="exercise_row" th:each="exercise : ${training.exercises}">
+					<td th:each="column, iStat : ${exercise}"
+							th:utext="${column}"
+							th:class="${iStat.first} ? exercise_name : exercise_detail">
+					</td>
+					<!-- TODO: creation of <a href=...>exercise</a> in exercises with names including link after '@' -->
+				</tr>
+				<tr th:if="${training.comments != ''}">
+					<td th:utext="${training.comments}"
+							th:colspan="${training.columnCount}"
+							class="comment_row">
+					</td>
+				</tr>
+			</table>
+		</div>
+	
+	</div>
+</div>
+
+<div id="footer">
+	<div id="footer_link">
+		<a href="https://trenujzdrowo.com/">WWW.TRENUJZDROWO.COM</a>
+	</div>
+	<div id="footer_motto">
+		<p>Zmień swoje życie,<br>zadbaj o zdrowie!</p>
+	</div>
+	<div id="footer_logo_container">
+		<img id="footer_logo" src="https://files.clickweb.home.pl/cf/46/cf4653e2-2166-48c2-b45c-07cce608e064.png" alt="logo"/>
+	</div>
+</div>
+
+<!-- this div is placed with z-index-1 under the header logo to
+		create clickable logo (workaround for flying saucer issue with image as link)-->
+<div id="link_logo">
+	<a href="https://trenujzdrowo.com">
+		##################<br>##################<br>##################
+	</a>
+</div>
+
+</body>
+</html>

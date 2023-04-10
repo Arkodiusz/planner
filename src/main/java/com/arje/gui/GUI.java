@@ -11,8 +11,8 @@ import static com.arje.Main.*;
 
 public class GUI implements ActionListener {
 
-
-    private String pathToXlsFile = "C:\\xyz\\plan1.xlsx";
+    private String pathToXlsFile = "C:\\xyz\\plan_template.xlsx";
+//    private String pathToXlsFile = "";
 
     JPanel panel = new JPanel();
 
@@ -28,8 +28,8 @@ public class GUI implements ActionListener {
 
     public GUI() {
 
-        String projecVersion = getClass().getPackage().getImplementationVersion();
-        JFrame frame = new JFrame("Planner " + projecVersion);
+        String projectVersion = getClass().getPackage().getImplementationVersion();
+        JFrame frame = new JFrame("Planner " + projectVersion);
 
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 

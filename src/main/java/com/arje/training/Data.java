@@ -13,7 +13,7 @@ public class Data {
     public Data(Sheet sheet) {
         for (Row row : sheet) {
             if (isNotNullRow(row)) {
-                data.put(row.getCell(0).toString(), row.getCell(1).toString());
+                data.put(row.getCell(0).toString() + ":", row.getCell(1).toString());
             }
         }
     }
@@ -22,16 +22,7 @@ public class Data {
         return row.getCell(0) != null && row.getCell(1) != null;
     }
 
-    public String toHtml() {
-        StringBuilder html = new StringBuilder();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            html.append("<b>");
-            html.append(entry.getKey());
-            html.append(": ");
-            html.append("</b>");
-            html.append(entry.getValue());
-            html.append("<br>");
-        }
-        return html.toString();
+    public Map<String, String> getData() {
+        return data;
     }
 }

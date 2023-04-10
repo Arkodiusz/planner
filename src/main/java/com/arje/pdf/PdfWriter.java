@@ -16,6 +16,7 @@ public class PdfWriter {
 
     private static final String PDF = ".pdf";
     private static final int PAGE_HEIGHT_PX = 1056;
+    public static final String FONTS_DIRECTORY = "src/main/resources/assets/fonts/";
 
     public static void convertHtmlToPdf(File sourceHtml) {
         try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(sourceHtml.getAbsolutePath(), PDF))) {
@@ -25,10 +26,10 @@ public class PdfWriter {
             int pageCount = calculatePageCount(renderer, document);
             renderer.getSharedContext().setInteractive(false);
             renderer.setDocumentFromString(getHtmlWithFooterPlacedAtBottomOfLastPdfPage(document, pageCount));
-            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Medium.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-SemiBold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            renderer.getFontResolver().addFont("template/assets/fonts/Barlow-Black.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            renderer.getFontResolver().addFont(FONTS_DIRECTORY + "Barlow-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            renderer.getFontResolver().addFont(FONTS_DIRECTORY + "Barlow-Medium.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            renderer.getFontResolver().addFont(FONTS_DIRECTORY + "Barlow-SemiBold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            renderer.getFontResolver().addFont(FONTS_DIRECTORY + "Barlow-Black.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             renderer.layout();
             renderer.createPDF(outputStream);
         } catch (IOException e) {

@@ -65,68 +65,23 @@ public class Training {
         return cells;
     }
 
-    public String toHtml() {
-            StringBuilder html = new StringBuilder();
+    public String getName() {
+        return name;
+    }
 
-            html.append("<div class=single_plan>");
+    public String getComments() {
+        return comments;
+    }
 
-            html.append("<h3>");
-            html.append(this.name);
-            html.append("</h3>");
+    public List<String> getHeaders() {
+        return headers;
+    }
 
-            html.append("<table class=training_table>");
-            
-            html.append("<tr class=\"header_row\">");
-            int header_column = 0;
-            for (String header : headers) {
-                html.append(header_column == 0 ? "<th class=\"header_name\">" : "<th class=\"header_detail\">");
-                html.append(header);
-                html.append("</th>");
-                header_column++;
-            }
-            html.append("</tr>");
+    public List<List<String>> getExercises() {
+        return exercises;
+    }
 
-        for (List<String> exercise : exercises) {
-            html.append("<tr class=\"exercise_row\">");
-            int exercise_column = 0;
-            for (String detail : exercise) {
-                if (exercise_column == 0) {
-                    html.append("<td class=\"exercise_name\">");
-                    String[] split = detail.split("@");
-                    if (split.length == 1){
-                        html.append(detail);
-                    } else if (split.length == 2) {
-                        html.append("<a href=\"");
-                        html.append(split[1]);
-                        html.append("\">");
-                        html.append(split[0]);
-                        html.append("</a>");
-                    } else {
-                        throw new RuntimeException("ERROR! Exercise name/link format error in training " + this.name);
-                    }
-                } else {
-                    html.append("<td class=\"exercise_detail\">");
-                    html.append(detail);
-                }
-                html.append("</td>");
-                exercise_column++;
-            }
-            html.append("</tr>");
-        }
-
-        if (!comments.isBlank()) {
-            html.append("<tr>");
-            html.append("<td class=\"comment_row\" colspan=\"");
-            html.append(columnCount);
-            html.append("\">");
-            html.append(comments);
-            html.append("</td>");
-            html.append("</tr>");
-        }
-
-        html.append("</table>");
-        html.append("</div>");
-
-        return html.toString();
+    public int getColumnCount() {
+        return columnCount;
     }
 }

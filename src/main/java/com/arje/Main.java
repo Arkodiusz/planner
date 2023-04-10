@@ -2,6 +2,7 @@ package com.arje;
 
 import com.arje.gui.GUI;
 import com.arje.html.HtmlBuilder;
+import com.arje.html.ThymeleafHtmlBuilder;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.File;
@@ -16,10 +17,10 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 
 public class Main {
 
-    private static final String PATH_TO_TEMPLATE_HTML = "template/template.html";
-    private static final String PATH_TO_TEMPLATE_CSS = "template/template.css";
+    private static final String PATH_TO_TEMPLATE_HTML = "src/main/resources/template.html";
 
     public static final String HTML = ".html";
+    public static final String CSS = ".css";
     public static final String XLS = ".xls";
     public static final String XLSX = ".xlsx";
 
@@ -32,15 +33,14 @@ public class Main {
 
         Iterator<Sheet> sheets = getSheetsFromXls(pathToXlsFile);
 
-        HtmlBuilder htmlBuilder = new HtmlBuilder(getStringFromFile(PATH_TO_TEMPLATE_HTML));
-        htmlBuilder.includeStyling(getStringFromFile(PATH_TO_TEMPLATE_CSS));
+        HtmlBuilder htmlBuilder = new ThymeleafHtmlBuilder(PATH_TO_TEMPLATE_HTML);
+        htmlBuilder.includeStyling(getStringFromFile(getPathWithDifferentExtension(PATH_TO_TEMPLATE_HTML, CSS)));
         htmlBuilder.includePlanInfo(sheets.next());
         htmlBuilder.includePlanData(sheets.next());
-        htmlBuilder.includeTrainingPlans(sheets);
+        htmlBuilder.includeTrainings(sheets);
 
         File tempHtmlFile = getTemporaryHtmlFile(pathToXlsFile);
         writeStringToFile(tempHtmlFile, htmlBuilder.getHtmlString(), StandardCharsets.UTF_8);
-
         convertHtmlToPdf(tempHtmlFile);
 
         deleteTemporaryHtml(tempHtmlFile);
