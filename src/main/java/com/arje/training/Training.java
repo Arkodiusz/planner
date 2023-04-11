@@ -10,10 +10,10 @@ import java.util.List;
 
 public class Training {
 
-    private final String name;
+    private final String trainingName;
     private final String comments;
     private final List<String> headers = new ArrayList<>();
-    private final List<List<String>> exercises = new ArrayList<>();
+    private final List<Exercise> exercises = new ArrayList<>();
     private int columnCount;
 
     public Training(Sheet sheet) {
@@ -21,10 +21,10 @@ public class Training {
 
         Row nameRow = sheet.getRow(0);
         if (nameRow != null) {
-            this.name = nameRow.getCell(0).toString();
+            this.trainingName = nameRow.getCell(0).toString();
             rows.next();
         } else {
-            this.name = "TRAINING";
+            this.trainingName = "TRAINING";
         }
 
         Row commentsRow = sheet.getRow(1);
@@ -42,31 +42,48 @@ public class Training {
         }
 
         while (rows.hasNext()) {
-            exercises.add(getExerciseDetailsFromRow(rows.next()));
+            exercises.add(getExerciseFromRow(rows.next()));
         }
     }
 
-    private List<String> getExerciseDetailsFromRow(Row row) {
-        List<String> cells = new ArrayList<>();
+    private Exercise getExerciseFromRow(Row row) {
+
+        String name = "";
+        String link = "";
+        List<String> details = new ArrayList<>();
+
         int i = 0;
         for (int column = 0; column < columnCount; column++) {
             Cell cell = row.getCell(column);
             if (cell != null) {
-                cells.add(cell.toString().replace(".0", ""));
+                String cellValue = cell.toString();
+                if (column == 0) {
+                    String[] split = cellValue.split("@");
+                    if (split.length == 1) {
+                        name = split[0];
+                    } else if (split.length == 2) {
+                        name = split[0];
+                        link = split[1];
+                    } else {
+                        throw new RuntimeException("ERROR! Exercise name/link format error in sheet" + row.getSheet().getSheetName() + ", row " + row.getRowNum());
+                    }
+                } else {
+                    details.add(cellValue);
+                }
             } else {
-                cells.add("");
+                details.add("");
             }
             i++;
         }
         while (i < columnCount) {
-            cells.add("");
+            details.add("");
             i++;
         }
-        return cells;
+        return new Exercise(name, link, details);
     }
 
-    public String getName() {
-        return name;
+    public String getTrainingName() {
+        return trainingName;
     }
 
     public String getComments() {
@@ -77,7 +94,7 @@ public class Training {
         return headers;
     }
 
-    public List<List<String>> getExercises() {
+    public List<Exercise> getExercises() {
         return exercises;
     }
 

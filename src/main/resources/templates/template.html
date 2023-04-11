@@ -38,7 +38,7 @@
 	<div id=multiple_plans_container>
 		
 		<div class=single_plan th:each="training : ${trainings}">
-			<h3 th:utext="${training.name}"></h3>
+			<h3 th:utext="${training.trainingName}"></h3>
 			<table class="training_table">
 				<tr class="header_row">
 					<th th:each="header, iStat : ${training.headers}"
@@ -47,11 +47,20 @@
 					</th>
 				</tr>
 				<tr class="exercise_row" th:each="exercise : ${training.exercises}">
-					<td th:each="column, iStat : ${exercise}"
-							th:utext="${column}"
-							th:class="${iStat.first} ? exercise_name : exercise_detail">
+					
+					<td th:if="${exercise.link == ''}"
+							th:utext="${exercise.name}"
+							class="exercise_name">
 					</td>
-					<!-- TODO: creation of <a href=...>exercise</a> in exercises with names including link after '@' -->
+					<td th:unless="${exercise.link == ''}"
+							class="exercise_name">
+						<a th:href="${exercise.link}" th:utext="${exercise.name}"></a>
+					</td>
+					
+					<td th:each="column : ${exercise.details}"
+							th:utext="${column}"
+							class="exercise_detail">
+					</td>
 				</tr>
 				<tr th:if="${training.comments != ''}">
 					<td th:utext="${training.comments}"
