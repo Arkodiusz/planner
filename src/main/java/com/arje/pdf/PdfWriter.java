@@ -16,7 +16,7 @@ public class PdfWriter {
 
     private static final String PDF = ".pdf";
     private static final int PAGE_HEIGHT_PX = 1056;
-    public static final String FONTS_DIRECTORY = "src/main/resources/assets/fonts/";
+    public static final String FONTS_DIRECTORY = "src/main/resources/templates/assets/fonts/";
 
     public static void convertHtmlToPdf(File sourceHtml) {
         try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(sourceHtml.getAbsolutePath(), PDF))) {

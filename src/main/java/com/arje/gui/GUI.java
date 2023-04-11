@@ -11,7 +11,7 @@ import static com.arje.Main.*;
 
 public class GUI implements ActionListener {
 
-    private String pathToXlsFile = "C:\\xyz\\plan_template.xlsx";
+    private String pathToXlsFile = "src/main/resources/example/plan_template.xlsx";
 //    private String pathToXlsFile = "";
 
     JPanel panel = new JPanel();

@@ -17,7 +17,7 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 
 public class Main {
 
-    private static final String PATH_TO_TEMPLATE_HTML = "src/main/resources/template.html";
+    private static final String PATH_TO_TEMPLATE_HTML = "src/main/resources/templates/template.html";
 
     public static final String HTML = ".html";
     public static final String CSS = ".css";
