@@ -42,44 +42,8 @@ public class Training {
         }
 
         while (rows.hasNext()) {
-            exercises.add(getExerciseFromRow(rows.next()));
+            exercises.add(new Exercise(rows.next(), columnCount));
         }
-    }
-
-    private Exercise getExerciseFromRow(Row row) {
-
-        String name = "";
-        String link = "";
-        List<String> details = new ArrayList<>();
-
-        int i = 0;
-        for (int column = 0; column < columnCount; column++) {
-            Cell cell = row.getCell(column);
-            if (cell != null) {
-                String cellValue = cell.toString();
-                if (column == 0) {
-                    String[] split = cellValue.split("@");
-                    if (split.length == 1) {
-                        name = split[0];
-                    } else if (split.length == 2) {
-                        name = split[0];
-                        link = split[1];
-                    } else {
-                        throw new RuntimeException("ERROR! Exercise name/link format error in sheet" + row.getSheet().getSheetName() + ", row " + row.getRowNum());
-                    }
-                } else {
-                    details.add(cellValue);
-                }
-            } else {
-                details.add("");
-            }
-            i++;
-        }
-        while (i < columnCount) {
-            details.add("");
-            i++;
-        }
-        return new Exercise(name, link, details);
     }
 
     public String getTrainingName() {
