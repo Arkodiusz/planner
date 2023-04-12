@@ -13,7 +13,7 @@ public class Data {
     public Data(Sheet sheet) {
         for (Row row : sheet) {
             if (isNotNullRow(row)) {
-                data.put(row.getCell(0).toString() + ":", row.getCell(1).toString().replace(".0", ""));
+                data.put(row.getCell(0).toString(), row.getCell(1).toString().replace(".0", ""));
             }
         }
     }

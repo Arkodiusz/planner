@@ -23,12 +23,9 @@
 				</td>
 				<td id="data" class="no_border">
 					<div>
-						<table th:each="dataRow : ${data}">
-							<tr>
-								<td class="data_entry_key" th:text="${dataRow.key}"></td>
-								<td th:utext="${dataRow.value}"></td>
-							</tr>
-						</table>
+						<p th:each="dataRow : ${data}">
+							<span th:utext="|<b>${dataRow.key}:</b> ${dataRow.value}|"></span>
+						</p>
 					</div>
 				</td>
 			</tr>
