@@ -1,7 +1,7 @@
 package com.arje.html;
 
-import com.arje.training.Data;
-import com.arje.training.Training;
+import com.arje.data.Data;
+import com.arje.data.Training;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.thymeleaf.TemplateEngine;

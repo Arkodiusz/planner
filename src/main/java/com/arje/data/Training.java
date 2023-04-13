@@ -1,4 +1,4 @@
-package com.arje.training;
+package com.arje.data;
 
 import lombok.Getter;
 import org.apache.poi.ss.usermodel.Cell;
