@@ -5,23 +5,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-
-import static com.arje.utils.FileUtils.getPathWithDifferentExtension;
 
 public class PdfWriter {
 
-    private static final String PDF = ".pdf";
     private static final int PAGE_HEIGHT_PX = 1056;
-    public static final String FONTS_DIRECTORY = "src/main/resources/templates/assets/fonts/";
+    private static final String FONTS_DIRECTORY = "src/main/resources/templates/assets/fonts/";
 
-    public static void convertHtmlToPdf(File sourceHtml) {
-        try (OutputStream outputStream = new FileOutputStream(getPathWithDifferentExtension(sourceHtml.getAbsolutePath(), PDF))) {
+    public static byte[] convertHtmlToPdf(String sourceHtml) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ITextRenderer renderer = new ITextRenderer();
-            Document document = Jsoup.parse(sourceHtml, "UTF-8");
+            Document document = Jsoup.parse(sourceHtml);
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             int pageCount = calculatePageCount(renderer, document);
             renderer.getSharedContext().setInteractive(false);
@@ -32,6 +27,7 @@ public class PdfWriter {
             renderer.getFontResolver().addFont(FONTS_DIRECTORY + "Barlow-Black.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             renderer.layout();
             renderer.createPDF(outputStream);
+            return outputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

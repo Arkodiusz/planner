@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class XlsUtils {
 
     public static Iterator<Sheet> getSheetsFromXls(String pathToXlsFile) {
-        try(FileInputStream xlsFile = new FileInputStream(pathToXlsFile)) {
+        try (FileInputStream xlsFile = new FileInputStream(pathToXlsFile)) {
             Workbook workbook = new XSSFWorkbook(xlsFile);
             return workbook.iterator();
         } catch (IOException e) {

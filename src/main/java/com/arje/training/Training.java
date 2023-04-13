@@ -1,5 +1,6 @@
 package com.arje.training;
 
+import lombok.Getter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Getter
 public class Training {
 
     private final String trainingName;
@@ -44,25 +46,5 @@ public class Training {
         while (rows.hasNext()) {
             exercises.add(new Exercise(rows.next(), columnCount));
         }
-    }
-
-    public String getTrainingName() {
-        return trainingName;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public List<String> getHeaders() {
-        return headers;
-    }
-
-    public List<Exercise> getExercises() {
-        return exercises;
-    }
-
-    public int getColumnCount() {
-        return columnCount;
     }
 }

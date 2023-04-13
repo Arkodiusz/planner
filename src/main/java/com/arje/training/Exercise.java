@@ -1,10 +1,12 @@
 package com.arje.training;
 
+import lombok.Getter;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Exercise {
 
     private String name = "";
@@ -38,17 +40,5 @@ public class Exercise {
             details.add("");
             filledCells++;
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public List<String> getDetails() {
-        return details;
     }
 }

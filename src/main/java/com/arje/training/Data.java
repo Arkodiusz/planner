@@ -1,11 +1,13 @@
 package com.arje.training;
 
+import lombok.Getter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Getter
 public class Data {
 
     Map<String, String> data = new LinkedHashMap<>();
@@ -20,9 +22,5 @@ public class Data {
 
     private static boolean isNotNullRow(Row row) {
         return row.getCell(0) != null && row.getCell(1) != null;
-    }
-
-    public Map<String, String> getData() {
-        return data;
     }
 }
