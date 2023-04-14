@@ -22,14 +22,13 @@ public class GeneratorController {
     public ResponseEntity<?> generatePdf(@RequestParam("source") MultipartFile multipartFile) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.OK)
+                    .ok()
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(generatorService.generatePdf(multipartFile));
         } catch (Exception e) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"message\":\"" + e.getMessage() + "\"}");
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 }

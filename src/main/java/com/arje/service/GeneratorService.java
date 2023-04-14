@@ -15,7 +15,6 @@ import java.util.Iterator;
 @AllArgsConstructor
 public class GeneratorService {
 
-    public static final String XLS = ".xls";
     public static final String XLSX = ".xlsx";
 
     private final ThymeleafHtmlBuilderService htmlBuilder;
@@ -30,7 +29,7 @@ public class GeneratorService {
 
     private void validateXlsFileName(MultipartFile multipartFile) throws InvalidExcelFileExtensionException {
         String filename = multipartFile.getOriginalFilename();
-        if (filename == null || !(filename.endsWith(XLS) || filename.endsWith(XLSX))) {
+        if (filename == null || !filename.endsWith(XLSX)) {
             throw new InvalidExcelFileExtensionException();
         }
     }
