@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -23,8 +22,7 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Service
-public class ThymeleafHtmlBuilderService {
+public class ThymeleafHtmlBuilder {
 
     public static final String PATH_TO_TEMPLATE_HTML = "pdf_document/pdf_template.html";
     public static final String PATH_TO_TEMPLATE_CSS = "pdf_document/pdf_template.css";
@@ -33,15 +31,9 @@ public class ThymeleafHtmlBuilderService {
     public static final String DATA_VARIABLE = "data";
     public static final String TRAININGS_VARIABLE = "trainings";
 
-    private final Context context = new Context();;
-    private final TemplateEngine templateEngine = new TemplateEngine();;
-
-    public ThymeleafHtmlBuilderService() {
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setTemplateMode(TemplateMode.HTML);
-        resolver.setCharacterEncoding("UTF-8");
-        this.templateEngine.setTemplateResolver(resolver);
-    }
+    private final Context context = new Context();
+    private final TemplateEngine templateEngine = new TemplateEngine();
+    private final ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
 
     public String getHtmlString(Iterator<Sheet> sheets) {
         try {
@@ -49,6 +41,10 @@ public class ThymeleafHtmlBuilderService {
             includePlanInfo(sheets.next());
             includePlanData(sheets.next());
             includeTrainings(sheets);
+
+            resolver.setTemplateMode(TemplateMode.HTML);
+            resolver.setCharacterEncoding("UTF-8");
+            templateEngine.setTemplateResolver(resolver);
             return templateEngine.process(PATH_TO_TEMPLATE_HTML, context);
         } catch (RuntimeException e) {
             String message = e.getMessage();

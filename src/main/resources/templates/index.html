@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PDF generator</title>
+	<link href="../static/style.css" rel="stylesheet">
+	<link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+
+<h2>GENERATOR PDF</h2>
+
+<form
+		id="box"
+		method="post"
+		th:action="@{/generate}"
+		enctype="multipart/form-data">
+	<input id="input-file" type="file" name="file" accept=".xlsx"/>
+	<button type="submit">Generuj PDF</button>
+</form>
+
+</body>
+</html>

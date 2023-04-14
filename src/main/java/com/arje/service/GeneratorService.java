@@ -17,13 +17,12 @@ public class GeneratorService {
 
     public static final String XLSX = ".xlsx";
 
-    private final ThymeleafHtmlBuilderService htmlBuilder;
     private final PdfWriterService pdfWriter;
 
     public byte[] generatePdf(MultipartFile multipartFile) throws IOException {
         validateXlsFileName(multipartFile);
         Iterator<Sheet> sheets = getSheetsFromXls(multipartFile);
-        String processedHtmlAsString = htmlBuilder.getHtmlString(sheets);
+        String processedHtmlAsString = new ThymeleafHtmlBuilder().getHtmlString(sheets);
         return pdfWriter.convertHtmlToPdf(processedHtmlAsString);
     }
 
