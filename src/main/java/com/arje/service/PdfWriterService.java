@@ -13,11 +13,12 @@ import java.io.IOException;
 public class PdfWriterService {
 
     private static final int PAGE_HEIGHT_PX = 1056;
-    private static final String FONTS_DIRECTORY = "src/main/resources/templates/assets/fonts/";
+    private static final String FONTS_DIRECTORY = "templates/assets/fonts/";
+
+    private final ITextRenderer renderer = new ITextRenderer();
 
     public byte[] convertHtmlToPdf(String sourceHtml) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ITextRenderer renderer = new ITextRenderer();
             Document document = Jsoup.parse(sourceHtml);
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             int pageCount = calculatePageCount(renderer, document);

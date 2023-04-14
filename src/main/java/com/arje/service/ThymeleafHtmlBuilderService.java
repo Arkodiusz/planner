@@ -6,26 +6,29 @@ import com.arje.exception.CssProcessingException;
 import com.arje.exception.HtmlProcessingException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.*;
 
-import static org.apache.commons.io.FileUtils.readFileToString;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class ThymeleafHtmlBuilderService {
 
-    public static final String PATH_TO_TEMPLATE_HTML = "src/main/resources/templates/template.html";
-    public static final String PATH_TO_TEMPLATE_CSS = "src/main/resources/templates/template.css";
+    public static final String PATH_TO_TEMPLATE_HTML = "templates/template.html";
+    public static final String PATH_TO_TEMPLATE_CSS = "templates/template.css";
 
     public static final String STYLE_VARIABLE = "style";
     public static final String DATA_VARIABLE = "data";
@@ -35,7 +38,7 @@ public class ThymeleafHtmlBuilderService {
     private final TemplateEngine templateEngine = new TemplateEngine();;
 
     public ThymeleafHtmlBuilderService() {
-        FileTemplateResolver resolver = new FileTemplateResolver();
+        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding("UTF-8");
         this.templateEngine.setTemplateResolver(resolver);
@@ -43,7 +46,7 @@ public class ThymeleafHtmlBuilderService {
 
     public String getHtmlString(Iterator<Sheet> sheets) {
         try {
-            includeStyling(readFileToString(new File(PATH_TO_TEMPLATE_CSS), StandardCharsets.UTF_8));
+            includeStyling(getCssFileAsString());
             includePlanInfo(sheets.next());
             includePlanData(sheets.next());
             includeTrainings(sheets);
@@ -56,6 +59,14 @@ public class ThymeleafHtmlBuilderService {
             throw new HtmlProcessingException(message);
         } catch (IOException e) {
             throw new CssProcessingException(e.getMessage());
+        }
+    }
+
+    private String getCssFileAsString() throws IOException {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource resource = resourceLoader.getResource("classpath:" + PATH_TO_TEMPLATE_CSS);
+        try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
         }
     }
 
