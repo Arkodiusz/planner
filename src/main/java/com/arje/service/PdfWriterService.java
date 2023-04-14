@@ -13,7 +13,7 @@ import java.io.IOException;
 public class PdfWriterService {
 
     private static final int PAGE_HEIGHT_PX = 1056;
-    private static final String FONTS_DIRECTORY = "templates/assets/fonts/";
+    private static final String FONTS_DIRECTORY = "pdf_document/assets/fonts/";
 
     private final ITextRenderer renderer = new ITextRenderer();
 

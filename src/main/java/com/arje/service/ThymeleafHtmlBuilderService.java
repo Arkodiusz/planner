@@ -17,7 +17,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
@@ -27,8 +26,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 public class ThymeleafHtmlBuilderService {
 
-    public static final String PATH_TO_TEMPLATE_HTML = "templates/template.html";
-    public static final String PATH_TO_TEMPLATE_CSS = "templates/template.css";
+    public static final String PATH_TO_TEMPLATE_HTML = "pdf_document/pdf_template.html";
+    public static final String PATH_TO_TEMPLATE_CSS = "pdf_document/pdf_template.css";
 
     public static final String STYLE_VARIABLE = "style";
     public static final String DATA_VARIABLE = "data";
