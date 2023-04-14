@@ -1,59 +1,31 @@
 package com.arje.service;
 
-import com.arje.exception.HtmlProcessingException;
 import com.arje.exception.InvalidExcelFileExtensionException;
-import com.arje.html.HtmlBuilder;
-import com.arje.html.ThymeleafHtmlBuilder;
+import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-import static com.arje.pdf.PdfWriter.convertHtmlToPdf;
-import static org.apache.commons.io.FileUtils.readFileToString;
-
 @Service
+@AllArgsConstructor
 public class GeneratorService {
 
     public static final String XLS = ".xls";
     public static final String XLSX = ".xlsx";
 
-    public static final String PATH_TO_TEMPLATE_HTML = "src/main/resources/templates/template.html";
-    public static final String PATH_TO_TEMPLATE_CSS = "src/main/resources/templates/template.css";
+    private final ThymeleafHtmlBuilderService htmlBuilder;
+    private final PdfWriterService pdfWriter;
 
     public byte[] generatePdf(MultipartFile multipartFile) throws IOException {
-
         validateXlsFileName(multipartFile);
-
         Iterator<Sheet> sheets = getSheetsFromXls(multipartFile);
-
-        String processedHtmlAsString = getProcessedHtmlAsString(sheets);
-
-        return convertHtmlToPdf(processedHtmlAsString);
-    }
-
-    private String getProcessedHtmlAsString(Iterator<Sheet> sheets) throws IOException {
-        try {
-            HtmlBuilder htmlBuilder = new ThymeleafHtmlBuilder(PATH_TO_TEMPLATE_HTML);
-            htmlBuilder.includeStyling(readFileToString(new File(PATH_TO_TEMPLATE_CSS), StandardCharsets.UTF_8));
-            htmlBuilder.includePlanInfo(sheets.next());
-            htmlBuilder.includePlanData(sheets.next());
-            htmlBuilder.includeTrainings(sheets);
-            return htmlBuilder.getHtmlString();
-        } catch (RuntimeException e) {
-            String message = e.getMessage();
-            if (message == null || message.isEmpty()) {
-                message = "Error during processing HTML template. Check formatting in excel file";
-            }
-            throw new HtmlProcessingException(message);
-        }
-
+        String processedHtmlAsString = htmlBuilder.getHtmlString(sheets);
+        return pdfWriter.convertHtmlToPdf(processedHtmlAsString);
     }
 
     private void validateXlsFileName(MultipartFile multipartFile) throws InvalidExcelFileExtensionException {
