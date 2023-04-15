@@ -13,13 +13,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 @Controller
 @RequiredArgsConstructor
-public class PageController {
+public class StaticWebPageController {
 
     private static final String HOME = "/";
     public static final String _PDF = ".pdf";
+
+    private static final Logger LOG = Logger.getLogger(StaticWebPageController.class.getName());
 
     private final GeneratorService service;
 
@@ -40,20 +43,21 @@ public class PageController {
         try {
             byte[] generatedPdf = service.generatePdf(sourceFile);
             if(isValidFile(generatedPdf)) {
+                String pfdFilename = getFileNameForPdf(sourceFile);
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition",
-                        "attachment; filename = " + getFileNameForPdf(sourceFile));
+                        "attachment; filename = " + pfdFilename);
                 //use 'inline' to open file or 'attachment' to force download
 
                 ServletOutputStream outputStream = response.getOutputStream();
                 outputStream.write(generatedPdf);
                 outputStream.close();
+                LOG.info("Successfully generated " + pfdFilename);
             }
-            response.sendRedirect(HOME);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             errorMessage = e.getMessage();
             response.sendRedirect(HOME);
+            LOG.info("ERROR! " + errorMessage);
         }
     }
 

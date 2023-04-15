@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -22,7 +23,8 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ThymeleafHtmlBuilder {
+@Service
+public class ThymeleafHtmlBuilderService {
 
     public static final String PATH_TO_TEMPLATE_HTML = "pdf_document/pdf_template.html";
     public static final String PATH_TO_TEMPLATE_CSS = "pdf_document/pdf_template.css";
