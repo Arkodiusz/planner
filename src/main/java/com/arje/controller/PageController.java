@@ -1,7 +1,7 @@
 package com.arje.controller;
 
 import com.arje.service.GeneratorService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,22 +15,25 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PageController {
 
     private static final String HOME = "/";
     public static final String _PDF = ".pdf";
 
-    GeneratorService service;
+    private final GeneratorService service;
+
+    private String errorMessage = "";
 
     @RequestMapping(HOME)
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        errorMessage = "";
         return "index";
     }
 
     @PostMapping("/generate")
     public void generatePdf(
-            Model model,
             @RequestParam("file") MultipartFile sourceFile,
             HttpServletResponse response) throws IOException {
 
@@ -39,16 +42,17 @@ public class PageController {
             if(isValidFile(generatedPdf)) {
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition",
-                        "attachment; filename = " + getDownloadFileName(sourceFile));
+                        "attachment; filename = " + getFileNameForPdf(sourceFile));
+                //use 'inline' to open file or 'attachment' to force download
+
                 ServletOutputStream outputStream = response.getOutputStream();
                 outputStream.write(generatedPdf);
                 outputStream.close();
             }
             response.sendRedirect(HOME);
         } catch (Exception e) {
-            // TODO: display error message to user
-            System.out.println("******************************************");
             System.out.println(e.getMessage());
+            errorMessage = e.getMessage();
             response.sendRedirect(HOME);
         }
     }
@@ -57,7 +61,7 @@ public class PageController {
         return generatedPdf != null && generatedPdf.length > 0;
     }
 
-    private String getDownloadFileName(MultipartFile sourceFile) {
+    private String getFileNameForPdf(MultipartFile sourceFile) {
         return Objects.requireNonNull(sourceFile.getOriginalFilename()).split("\\.")[0] + _PDF;
     }
 }
