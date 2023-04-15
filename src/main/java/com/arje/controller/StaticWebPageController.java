@@ -42,27 +42,21 @@ public class StaticWebPageController {
 
         try {
             byte[] generatedPdf = service.generatePdf(sourceFile);
-            if(isValidFile(generatedPdf)) {
-                String pfdFilename = getFileNameForPdf(sourceFile);
-                response.setContentType("application/pdf");
-                response.setHeader("Content-Disposition",
-                        "attachment; filename = " + pfdFilename);
-                //use 'inline' to open file or 'attachment' to force download
+            String pfdFilename = getFileNameForPdf(sourceFile);
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition",
+                    "attachment; filename = " + pfdFilename);
+            //use 'inline' to open file or 'attachment' to force download
 
-                ServletOutputStream outputStream = response.getOutputStream();
-                outputStream.write(generatedPdf);
-                outputStream.close();
-                LOG.info("Successfully generated " + pfdFilename);
-            }
+            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream.write(generatedPdf);
+            outputStream.close();
+            LOG.info("Successfully generated " + pfdFilename);
         } catch (Exception e) {
             errorMessage = e.getMessage();
             response.sendRedirect(HOME);
-            LOG.info("ERROR! " + errorMessage);
+            LOG.info(e.toString());
         }
-    }
-
-    private static boolean isValidFile(byte[] generatedPdf) {
-        return generatedPdf != null && generatedPdf.length > 0;
     }
 
     private String getFileNameForPdf(MultipartFile sourceFile) {

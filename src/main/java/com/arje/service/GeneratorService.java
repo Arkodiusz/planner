@@ -1,6 +1,7 @@
 package com.arje.service;
 
 import com.arje.exception.InvalidExcelFileExtensionException;
+import com.arje.exception.InvalidGeneratedPdfException;
 import com.arje.html.ThymeleafHtmlBuilder;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -24,7 +25,9 @@ public class GeneratorService {
         validateXlsFileName(multipartFile);
         Iterator<Sheet> sheets = getSheetsFromXls(multipartFile);
         String processedHtmlAsString = new ThymeleafHtmlBuilder().getHtmlString(sheets);
-        return pdfWriter.convertHtmlToPdf(processedHtmlAsString);
+        byte[] generatedPdf = pdfWriter.convertHtmlToPdf(processedHtmlAsString);
+        validateGeneratedFile(generatedPdf);
+        return generatedPdf;
     }
 
     private void validateXlsFileName(MultipartFile multipartFile) throws InvalidExcelFileExtensionException {
@@ -37,5 +40,11 @@ public class GeneratorService {
     private Iterator<Sheet> getSheetsFromXls(MultipartFile multipartFile) throws IOException {
         Workbook workbook = new XSSFWorkbook(multipartFile.getInputStream());
         return workbook.iterator();
+    }
+
+    private static void validateGeneratedFile(byte[] generatedPdf) throws InvalidGeneratedPdfException {
+        if (generatedPdf == null || generatedPdf.length == 0) {
+            throw new InvalidGeneratedPdfException();
+        }
     }
 }
