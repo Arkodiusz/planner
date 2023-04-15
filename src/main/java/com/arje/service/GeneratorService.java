@@ -1,6 +1,7 @@
 package com.arje.service;
 
 import com.arje.exception.InvalidExcelFileExtensionException;
+import com.arje.html.ThymeleafHtmlBuilder;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,12 +19,11 @@ public class GeneratorService {
     public static final String XLSX = ".xlsx";
 
     private final PdfWriterService pdfWriter;
-    private final ThymeleafHtmlBuilderService htmlBuilder;
 
     public byte[] generatePdf(MultipartFile multipartFile) throws IOException {
         validateXlsFileName(multipartFile);
         Iterator<Sheet> sheets = getSheetsFromXls(multipartFile);
-        String processedHtmlAsString = htmlBuilder.getHtmlString(sheets);
+        String processedHtmlAsString = new ThymeleafHtmlBuilder().getHtmlString(sheets);
         return pdfWriter.convertHtmlToPdf(processedHtmlAsString);
     }
 
