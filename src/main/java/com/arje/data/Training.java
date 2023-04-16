@@ -1,9 +1,8 @@
 package com.arje.data;
 
+import com.arje.helpers.SimpleRow;
+import com.arje.helpers.SimpleSheet;
 import lombok.Getter;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,29 +17,16 @@ public class Training {
     private final List<Exercise> exercises = new ArrayList<>();
     private int columnCount;
 
-    public Training(Sheet sheet) {
-        Iterator<Row> rows = sheet.iterator();
+    public Training(SimpleSheet sheet) {
+        Iterator<SimpleRow> rows = sheet.getRows().iterator();
 
-        Row nameRow = sheet.getRow(0);
-        if (nameRow != null) {
-            this.trainingName = nameRow.getCell(0).toString();
-            rows.next();
-        } else {
-            this.trainingName = "TRAINING";
-        }
+        this.trainingName = rows.next().getCell(0);
+        this.comments = rows.next().getCell(0);
 
-        Row commentsRow = sheet.getRow(1);
-        if (commentsRow != null) {
-            this.comments = commentsRow.getCell(0).toString();
-            rows.next();
-        } else {
-            this.comments = "";
-        }
-
-        Row headerRow = rows.next();
-        for (Cell header : headerRow) {
+        SimpleRow headerRow = rows.next();
+        for (String header : headerRow.getCells()) {
             columnCount++;
-            headers.add(header.toString());
+            headers.add(header);
         }
 
         while (rows.hasNext()) {

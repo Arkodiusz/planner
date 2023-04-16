@@ -1,6 +1,6 @@
 package com.arje.exception;
 
-import static com.arje.service.GeneratorService.XLSX;
+import static com.arje.ExcelUtils.XLSX;
 
 public class InvalidExcelFileExtensionException extends RuntimeException {
 

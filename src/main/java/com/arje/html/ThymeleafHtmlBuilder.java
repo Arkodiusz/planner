@@ -4,8 +4,8 @@ import com.arje.data.Data;
 import com.arje.data.Training;
 import com.arje.exception.CssProcessingException;
 import com.arje.exception.HtmlProcessingException;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import com.arje.helpers.SimpleRow;
+import com.arje.helpers.SimpleSheet;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -18,7 +18,9 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -35,7 +37,7 @@ public class ThymeleafHtmlBuilder {
     private final TemplateEngine templateEngine = new TemplateEngine();
     private final ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
 
-    public String getHtmlString(Iterator<Sheet> sheets) {
+    public String getHtmlString(Iterator<SimpleSheet> sheets) {
         try {
             includeStyling(getCssFileAsString());
             includePlanInfo(sheets.next());
@@ -49,7 +51,7 @@ public class ThymeleafHtmlBuilder {
         } catch (RuntimeException e) {
             String message = e.getMessage();
             if (message == null || message.isEmpty()) {
-                message = "Error during processing HTML template. Check formatting in excel file";
+                message = "Error during processing HTML template. Check formatting in spreadsheet";
             }
             throw new HtmlProcessingException(message);
         } catch (IOException e) {
@@ -69,20 +71,20 @@ public class ThymeleafHtmlBuilder {
         context.setVariable(STYLE_VARIABLE, "\n" + styling + "\n");
     }
 
-    private void includePlanInfo(Sheet sheetWithPlanInfo) {
-        for (Row row : sheetWithPlanInfo) {
-            String marker = row.getCell(0).toString();
-            String text = row.getCell(1).toString();
+    private void includePlanInfo(SimpleSheet sheetWithPlanInfo) {
+        for (SimpleRow row : sheetWithPlanInfo.getRows()) {
+            String marker = row.getCell(0);
+            String text = row.getCell(1);
             context.setVariable(marker, text);
         }
     }
 
-    private void includePlanData(Sheet sheetWithPlanData) {
+    private void includePlanData(SimpleSheet sheetWithPlanData) {
         Data data = new Data(sheetWithPlanData);
         context.setVariable(DATA_VARIABLE, data.getData());
     }
 
-    private void includeTrainings(Iterator<Sheet> sheets) {
+    private void includeTrainings(Iterator<SimpleSheet> sheets) {
         List<Training> trainings = new ArrayList<>();
         while (sheets.hasNext()) {
             Training training = new Training(sheets.next());

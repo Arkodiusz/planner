@@ -1,4 +1,4 @@
 /.idea/
 /target/
 
-~$*
+/src/main/resources/google-service-account-credentials.json
