@@ -35,31 +35,55 @@ public class StaticWebPageController {
         return "index";
     }
 
-    @PostMapping("/generate")
-    public void generatePdf(
+    @PostMapping("/generate/pdf/xlsx")
+    public void generatePdfFromXlsxFile(
             @RequestParam("file") MultipartFile sourceFile,
             HttpServletResponse response) throws IOException {
 
         try {
-            byte[] generatedPdf = service.generatePdf(sourceFile);
+            byte[] generatedPdf = service.generatePdfFromXlsxFile(sourceFile);
             String pfdFilename = getFileNameForPdf(sourceFile);
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition",
-                    "attachment; filename = " + pfdFilename);
-            //use 'inline' to open file or 'attachment' to force download
-
-            ServletOutputStream outputStream = response.getOutputStream();
-            outputStream.write(generatedPdf);
-            outputStream.close();
-            LOG.info("Successfully generated " + pfdFilename);
+            setGeneratedFileAsResponse(response, generatedPdf, pfdFilename);
         } catch (Exception e) {
-            errorMessage = e.getMessage();
-            response.sendRedirect(HOME);
-            LOG.info(e.toString());
+            logAndPassErrorMessageToUi(response, e);
         }
     }
 
-    private String getFileNameForPdf(MultipartFile sourceFile) {
+    @PostMapping("/generate/pdf/google")
+    public void generatePdfFromGoogleSpreadsheetUrl(
+            @RequestParam("spreadsheetUrl") String spreadsheetUrl,
+            HttpServletResponse response) throws IOException {
+
+        try {
+            byte[] generatedPdf = service.generatePdfFromGoogleSpreadsheetUrl(spreadsheetUrl);
+            String pfdFilename = "training plan" + _PDF;
+            setGeneratedFileAsResponse(response, generatedPdf, pfdFilename);
+        } catch (Exception e) {
+            logAndPassErrorMessageToUi(response, e);
+        }
+    }
+
+    private static String getFileNameForPdf(MultipartFile sourceFile) {
         return Objects.requireNonNull(sourceFile.getOriginalFilename()).split("\\.")[0] + _PDF;
+    }
+
+    private void logAndPassErrorMessageToUi(HttpServletResponse response, Exception e) throws IOException {
+        errorMessage = e.getMessage();
+        response.sendRedirect(HOME);
+        LOG.info(e.toString());
+    }
+
+    private static void setGeneratedFileAsResponse(
+            HttpServletResponse response,
+            byte[] generatedPdf,
+            String pfdFilename) throws IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename = " + pfdFilename);
+        //use 'inline' to open file or 'attachment' to force download
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write(generatedPdf);
+        outputStream.close();
+        LOG.info("Successfully generated " + pfdFilename);
     }
 }

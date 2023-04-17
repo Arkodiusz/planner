@@ -11,11 +11,24 @@
 <h2>GENERATOR PDF</h2>
 
 <form
-		id="box"
+		id="xlsx_form"
 		method="post"
-		th:action="@{/generate}"
+		th:action="@{/generate/pdf/xlsx}"
 		enctype="multipart/form-data">
+	<label for="input-file">Local file:</label>
+	<br>
 	<input id="input-file" type="file" name="file" accept=".xlsx"/>
+	<button type="submit">Generuj PDF</button>
+</form>
+<br>
+<br>
+<form
+		id="google_form"
+		method="post"
+		th:action="@{/generate/pdf/google}">
+	<label for="google-url">Google spreadsheet URL:</label>
+	<br>
+	<input id="google-url" type="text" name="spreadsheetUrl"/>
 	<button type="submit">Generuj PDF</button>
 </form>
 

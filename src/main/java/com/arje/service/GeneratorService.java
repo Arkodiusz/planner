@@ -1,5 +1,6 @@
 package com.arje.service;
 
+import com.arje.spreadsheet.GoogleSheetsUtils;
 import com.arje.exception.InvalidGeneratedPdfException;
 import com.arje.helpers.SimpleSheet;
 import com.arje.html.ThymeleafHtmlBuilder;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Iterator;
 
-import static com.arje.ExcelUtils.getSheetsFromXls;
+import static com.arje.spreadsheet.ExcelUtils.getSheetsFromXls;
+import static com.arje.spreadsheet.GoogleSheetsUtils.*;
 
 @Service
 @AllArgsConstructor
@@ -18,8 +21,13 @@ public class GeneratorService {
 
     private final PdfWriterService pdfWriter;
 
-    public byte[] generatePdf(MultipartFile xlsxFile) throws IOException {
+    public byte[] generatePdfFromXlsxFile(MultipartFile xlsxFile) throws IOException {
         Iterator<SimpleSheet> trainingData = getSheetsFromXls(xlsxFile);
+        return getGeneratedPdfWithTrainingData(trainingData);
+    }
+
+    public byte[] generatePdfFromGoogleSpreadsheetUrl(String spreadsheetUrl) throws IOException, GeneralSecurityException {
+        Iterator<SimpleSheet> trainingData = getSheetsFromGoogleSpreadsheet(spreadsheetUrl);
         return getGeneratedPdfWithTrainingData(trainingData);
     }
 
